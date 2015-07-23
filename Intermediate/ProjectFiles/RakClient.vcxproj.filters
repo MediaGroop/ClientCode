@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\RakClient.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{6A4927A9-B0CD-49AF-A564-722C2725CBA7}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\RakClient.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\RakClientEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{8F712E4E-48B2-427D-9563-E0765B1A0D86}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\RakClient">
+      <UniqueIdentifier>{9D55D377-EEEC-44EF-B052-3289DAC9BA2D}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\RakClient\RakClient.Build.cs">
+      <Filter>Source\RakClient</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\RakClient\RakClient.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\RakClient\RakClient.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\RakClient\RakClientCharacter.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\RakClient\RakClientCharacter.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\RakClient\RakClientGameMode.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\RakClient\RakClientGameMode.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\RakClient\RakClientPlayerController.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\RakClient\RakClientPlayerController.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\RakClient\AuthPacket.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\RakClient\Client.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\RakClient\Network.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\RakClient\AuthPacket.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\Client.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\PacketTypes.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\ClientPacket.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\Network.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\Source\RakClient\big_x64.lib">
+      <Filter>Source\RakClient</Filter>
+    </Library>
+  </ItemGroup>
+</Project>
