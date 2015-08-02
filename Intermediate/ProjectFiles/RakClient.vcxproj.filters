@@ -70,6 +70,9 @@
     <ClCompile Include="..\..\Source\RakClient\Network.cpp">
       <Filter>Source\RakClient</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\RakClient\VerifyPacket.cpp">
+      <Filter>Source\RakClient</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\RakClient\AuthPacket.h">
@@ -85,6 +88,9 @@
       <Filter>Source\RakClient</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\RakClient\Network.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\VerifyPacket.h">
       <Filter>Source\RakClient</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,26 @@ Client::Client(std::string host, unsigned short port)
 	UE_LOG(LogTemp, Warning, TEXT("Network client init..."));
 	this->host = host;
 	this->port = port;
+	pkey = new char[64]{
+		-88, -87, 47, 23,
+		14, -11, -104, 124,
+		8, -12, 98, 111,
+		-53, 56, 100, -110,
+
+		46, -79, 14, -102,
+		-126, 117, 15, -71,
+		-23, 118, 96, -102,
+		0, 84, -113, -19,
+
+		-113, 62, -16, -15,
+		64, -94, -72, -78,
+		89, -101, -5, 32,
+		-56, 122, -101, -101,
+
+		-114, -105, -36, 76,
+		94, 18, 97, 50,
+		21, -66, 109, 11,
+		-81, -74, 17, 110 };
 }
 
 void Client::Stop()
@@ -36,6 +56,7 @@ void Client::setSleep(double t)
 //Reads public key
 void Client::initSecurity()
 {
+	/*
 	TArray<int8> arr;
 	arr.Init(64);
 	FString path = "C:\\Users\\Alastar\\Documents\\Unreal Projects\\RakClient\\Source\\RakClient\\public";
@@ -65,6 +86,8 @@ void Client::initSecurity()
 			UE_LOG(LogTemp, Warning, TEXT("No file!"));
 		}
 	}
+	*/
+	this->secure = true;
 }
 
 uint32 Client::Run(){

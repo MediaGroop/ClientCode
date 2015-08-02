@@ -24,11 +24,15 @@ public:
 	void connectToServer(std::string, int);
 
 	UFUNCTION(BlueprintCallable, Category="RakNet")
-	static void sendCredentialsToAuth(FString acc, FString pass, int32 serverId);
+	static void sendCredentialsToAuth(FString acc, FString pass, uint8 serverId);
 
 	static TSharedPtr<Client> authClient;
 	static TSharedPtr<Client> serverClient;
-	
+
+	static RakNet::RakString session;
+	static RakNet::RakString login;
+	static RakNet::RakString passHash;
+
 	bool authlaunched = false;
 	const unsigned short authPort = 25565;
 	const std::string authAddress = "localhost";

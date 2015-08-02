@@ -43,6 +43,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\RakClient\VerifyPacket.cpp" />
+    <ClInclude Include="..\..\Source\RakClient\VerifyPacket.h" />
     <None Include="..\..\RakClient.uproject" />
     <None Include="..\..\Source\RakClient.Target.cs" />
     <None Include="..\..\Source\RakClientEditor.Target.cs" />

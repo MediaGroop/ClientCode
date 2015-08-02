@@ -32,7 +32,7 @@ public:
 	bool running;
 	bool secure = false;
 
-	char pkey[cat::EasyHandshake::PUBLIC_KEY_BYTES];
+	char* pkey;
 	
 	RakNet::RakPeerInterface* peer;
 	double sleep = 0.1;

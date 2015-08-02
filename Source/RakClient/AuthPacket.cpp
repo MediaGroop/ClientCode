@@ -21,7 +21,13 @@ void AuthPacket::send(Client* c)
 
 		bsOut.Write((RakNet::MessageID)ACCOUNT_AUTH);
 		RakNet::StringCompressor::Instance()->EncodeString(RakNet::RakString(this->accountName), 256, &bsOut);
-		RakNet::StringCompressor::Instance()->EncodeString(RakNet::RakString(this->password), 256, &bsOut);
+		RakNet::RakString hash = accountName;
+		hash += '.';
+		hash += this->password;
+		uint8 data[20];
+		FSHA1::HashBuffer(hash.C_String(), hash.GetLength(), data);
+		//RakNet::StringCompressor::Instance()->EncodeString(RakNet::RakString(this->password), 256, &bsOut);
+		bsOut.Write(data);
 		bsOut.Write(this->serverId);
 		c->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, c->serverRemote, false);
 	}
