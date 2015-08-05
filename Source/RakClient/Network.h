@@ -29,9 +29,9 @@ public:
 	static TSharedPtr<Client> authClient;
 	static TSharedPtr<Client> serverClient;
 
-	static RakNet::RakString session;
+	static unsigned char session[20];
 	static RakNet::RakString login;
-	static RakNet::RakString passHash;
+	static unsigned char passHash[20];
 
 	bool authlaunched = false;
 	const unsigned short authPort = 25565;

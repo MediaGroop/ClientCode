@@ -6,11 +6,11 @@ class VerifyPacket : public ClientPacket
 {
 private:
 	const char* accountName;
-	const char* passHash;
-	const char* session;
+	unsigned char passHash[20];
+	unsigned char session[20];
 public:
 	//acc, pass hash, session
-	VerifyPacket(const char*, const char*, const char*);
+	VerifyPacket(const char*, unsigned char p[20], unsigned char s[20]);
 	~VerifyPacket();
 	virtual void send(Client* c) override;
 };

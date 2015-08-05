@@ -5,11 +5,11 @@ class AuthPacket :
 	public ClientPacket
 {
 private:
-	const char* accountName;
-	const char* password;
+	RakNet::RakString accountName;
+	unsigned char password[20];
 	int serverId;
 public:
-	AuthPacket(const char*, const char*, int);
+	AuthPacket(RakNet::RakString, unsigned char h[20], int);
 	~AuthPacket();
 	virtual void send(Client* c) override;
 };

@@ -8,9 +8,9 @@
 
 TSharedPtr<Client> ANetwork::authClient;
 TSharedPtr<Client> ANetwork::serverClient;
-RakNet::RakString  ANetwork::session;
+unsigned char ANetwork::session[20];
 RakNet::RakString  ANetwork::login;
-RakNet::RakString  ANetwork::passHash;
+unsigned char ANetwork::passHash[20];
 
 // Sets default values
 ANetwork::ANetwork()
@@ -31,15 +31,23 @@ void ANetwork::sendCredentialsToAuth(FString acc, FString pass, uint8 serverId)
 		//****************
 
 		//Hashing and saving password(with salt) for future verification
-		uint8 data[20];
-		std::string toHash = accS;
-		toHash += '.';
-		toHash += passS;
-		FSHA1::HashBuffer(toHash.c_str(), toHash.length(), data);
-		ANetwork::passHash = *(new RakNet::RakString(reinterpret_cast<char*>(data)));
+		unsigned char data[20];
+		char* toHash = new char[1 + passS.length() + accS.length()];
+
+		for (int i = 0; i < accS.length(); ++i)
+			toHash[i] = accS.c_str()[i];
+
+		toHash[accS.length()] = '.';
+
+		for (int i = 0; i < accS.length(); ++i)
+			toHash[i + accS.length() + 1] = passS.c_str()[i];
+
+		FSHA1::HashBuffer(toHash, 1 + passS.length() + accS.length(), data);
+		for (int i = 0; i < 20; ++i)
+			ANetwork::passHash[i] = data[i];
 		//****************
 
-		AuthPacket packet(accS.c_str(), passS.c_str(), serverId);
+		AuthPacket packet(RakNet::RakString(accS.c_str()), data, serverId);
 		packet.send(ANetwork::authClient.Get());
 	}
 	else
@@ -67,8 +75,11 @@ void onLostConn(RakNet::Packet* p)
 void onGameServerConnect(RakNet::Packet* p)
 {
 	//Send veirfication data(Login and hash of password's hash(with salt) and session)
-	VerifyPacket packet(ANetwork::login.C_String(), ANetwork::passHash.C_String(), ANetwork::session.C_String());
+	ANetwork::serverClient.Get()->serverRemote = p->systemAddress;
+	VerifyPacket packet(ANetwork::login.C_String(), ANetwork::passHash, ANetwork::session);
 	packet.send(ANetwork::serverClient.Get());
+	UE_LOG(LogTemp, Warning, TEXT("We are connected to game server."));
+
 	//Now waiting for a response....
 }
 
@@ -77,7 +88,7 @@ void onAccountVerifyResponse(RakNet::Packet* packet)
 	RakNet::BitStream bsIn(packet->data, packet->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 
-	unsigned short result;
+	unsigned char result;
 	bsIn.Read(result);
 	UE_LOG(LogTemp, Warning, TEXT("Verification response: %i"), result);
 };
@@ -109,14 +120,17 @@ void onAuthResponse(RakNet::Packet* p)
 		break;
 	case 3:
 		//success
-		bsIn.Read(ANetwork::session);
+		for (int i = 0; i < 20; ++i)
+		bsIn.Read(ANetwork::session[i]);
+
 		bsIn.Read(address);
 		bsIn.Read(port);
+		
 		ANetwork::serverClient = TSharedPtr<Client>(new Client(std::string(address.C_String()), port));
 	
 		//init handlers...
 		ANetwork::serverClient.Get()->add((short)ID_CONNECTION_REQUEST_ACCEPTED, onGameServerConnect);
-		ANetwork::serverClient.Get()->add((short)VERIFY_ACCOUNT, onAccountVerifyResponse);
+		ANetwork::serverClient.Get()->add((short)VERIFY_RESPONSE, onAccountVerifyResponse);
 
 		ANetwork::serverClient.Get()->launch();
 		UE_LOG(LogTemp, Warning, TEXT("Success!"));
