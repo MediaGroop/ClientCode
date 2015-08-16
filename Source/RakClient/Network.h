@@ -20,11 +20,33 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	//void connectToAuth();
-	void connectToServer(std::string, int);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Auth Response", meta = (DisplayName = "OnServerInfoResponse"))
+	virtual void SetServerInfo(const FString& address, int32 port);
+	
+	UFUNCTION(BlueprintCallable, Category = "RakNet")
+	void connectToServer(const FString& address, int32 port);
 
 	UFUNCTION(BlueprintCallable, Category="RakNet")
-	static void sendCredentialsToAuth(FString acc, FString pass, uint8 serverId);
+	static void sendCredentialsToAuth(FString acc, FString pass);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Auth Response", meta = (DisplayName = "OnAuthResponse"))
+	virtual void ShowAuthResponse(const FString& text);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Auth Response", meta = (DisplayName = "OnAddServer"))
+	virtual void OnAddServer(const FString& text);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character management", meta = (DisplayName = "OnAddCharacterPreview"))
+	virtual void AddCharacterPreview(const FString& name, const FString& server);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character management", meta = (DisplayName = "OnNickAvailChange"))
+	virtual void SetNickAvailability(const bool avail);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Auth Response", meta = (DisplayName = "OnAuthSuccess"))
+	virtual void OpenPersonalCabinet(const FString& mail, const bool premium, const bool beta);
+
+	UFUNCTION(BlueprintCallable, Category = "Auth send", meta = (DisplayName = "Send Packet to Auth"))
+	void sendToAuth(const uint8& ID, const FString& arg1, const FString& arg2);
+
 
 	static TSharedPtr<Client> authClient;
 	static TSharedPtr<Client> serverClient;
@@ -32,8 +54,13 @@ public:
 	static unsigned char session[20];
 	static RakNet::RakString login;
 	static unsigned char passHash[20];
+	static ANetwork* instance;
 
+	static TSet<InstUIRequest*> requests;
+
+	static int characters_count;
 	bool authlaunched = false;
 	const unsigned short authPort = 25565;
 	const std::string authAddress = "localhost";
+	static TMap<int, RakNet::RakString> servers;
 };

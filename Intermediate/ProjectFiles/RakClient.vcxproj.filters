@@ -93,6 +93,15 @@
     <ClInclude Include="..\..\Source\RakClient\VerifyPacket.h">
       <Filter>Source\RakClient</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\AddServerHandler.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\CharPreview.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RakClient\InstUIRequest.h">
+      <Filter>Source\RakClient</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\Source\RakClient\big_x64.lib">

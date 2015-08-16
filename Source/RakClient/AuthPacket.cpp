@@ -2,7 +2,7 @@
 #include "AuthPacket.h"
 
 
-AuthPacket::AuthPacket(RakNet::RakString acc, unsigned char pass[20], int serverId)
+AuthPacket::AuthPacket(RakNet::RakString acc, unsigned char pass[20])
 {
 	this->accountName = acc;
 	for (int i = 0; i < 20; ++i){
@@ -10,7 +10,6 @@ AuthPacket::AuthPacket(RakNet::RakString acc, unsigned char pass[20], int server
 		UE_LOG(LogTemp, Warning, TEXT("HASH: %i"), password[i]);
 
 	}
-	this->serverId = serverId;
 }
 
 
@@ -27,8 +26,6 @@ void AuthPacket::send(Client* c)
 		RakNet::StringCompressor::Instance()->EncodeString(accountName, 256, &bsOut);
 		for (int i = 0; i < 20; ++i)
 			bsOut.Write(password[i]);
-
-		bsOut.Write(serverId);
 		c->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, c->serverRemote, false);
 	}
 	else
