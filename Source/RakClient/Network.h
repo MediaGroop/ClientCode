@@ -48,6 +48,10 @@ public:
 	void sendToAuth(const uint8& ID, const FString& arg1, const FString& arg2);
 
 
+	UFUNCTION(BlueprintCallable, Category = "Native setters", meta = (DisplayName = "Set selected char name"))
+	void setCharName(const FString& name);
+
+
 	static TSharedPtr<Client> authClient;
 	static TSharedPtr<Client> serverClient;
 
@@ -55,7 +59,7 @@ public:
 	static RakNet::RakString login;
 	static unsigned char passHash[20];
 	static ANetwork* instance;
-
+	static RakNet::RakString charName;
 	static TSet<InstUIRequest*> requests;
 
 	static int characters_count;

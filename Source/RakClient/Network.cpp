@@ -14,6 +14,7 @@ RakNet::RakString  ANetwork::login;
 unsigned char ANetwork::passHash[20];
 ANetwork* ANetwork::instance;
 TSet<InstUIRequest*> ANetwork::requests;
+RakNet::RakString ANetwork::charName;
 
 void handleAddCharacter(RakNet::Packet * p)
 {
@@ -108,6 +109,19 @@ void onAccountVerifyResponse(RakNet::Packet* packet)
 	unsigned char result;
 	bsIn.Read(result);
 	UE_LOG(LogTemp, Warning, TEXT("Verification response: %i"), result);
+	//Send character choose packet
+	if (result == 0){
+		//Better to write this shit right here, vs and ue sync is very weird :( 
+		RakNet::BitStream bsOut;
+		bsOut.Write((RakNet::MessageID)SELECT_CHARACTER);
+		bsOut.Write(ANetwork::charName);
+		ANetwork::authClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::authClient.Get()->serverRemote, false);
+	}
+    else
+    {
+		//No verification...
+		//Heh...
+    }
 };
 
 /*
@@ -238,13 +252,17 @@ void ANetwork::connectToServer(const FString& host, int32 port)
 
 void ANetwork::sendToAuth(const uint8& ID, const FString& arg1, const FString& arg2)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Sending packet: %i"), ID);
+	//UE_LOG(LogTemp, Warning, TEXT("Sending packet: %i"), ID);
 	RakNet::BitStream bsOut;
 	bsOut.Write(ID);
 	bsOut.Write(RakNet::RakString(TCHAR_TO_UTF8(*arg1)));
 	bsOut.Write(RakNet::RakString(TCHAR_TO_UTF8(*arg2)));
 	ANetwork::authClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::authClient.Get()->serverRemote, false);
 }
+
+void ANetwork::setCharName(const FString& name){
+	ANetwork::charName = RakNet::RakString(TCHAR_TO_UTF8(*name));
+};
 
 // Called every frame
 void ANetwork::Tick(float DeltaTime)
