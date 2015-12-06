@@ -2,7 +2,7 @@
 #include "RakClient.h"
 #include "Network.h"
 
-TMap<int, RakNet::RakString> ANetwork::servers;
+//TMap<int, RakNet::RakString> ANetwork::servers;
 
 void addServerHandler(RakNet::Packet* p)
 {
@@ -12,8 +12,8 @@ void addServerHandler(RakNet::Packet* p)
 	int id;
 	bsIn.Read(name);
 	bsIn.Read(id);
-	ANetwork::servers.Add(id, name);
-	ANetwork::instance->OnAddServer(FString(name.C_String()));
+	//ANetwork::servers.Add(id, name);
+	//ANetwork::instance->OnAddServer(FString(name.C_String()));
 	//TODO: add to servers list in UI
 
 };

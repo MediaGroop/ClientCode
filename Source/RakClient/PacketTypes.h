@@ -4,18 +4,18 @@
 enum GameMessages
 {
 	ID_GAME_MESSAGE_1 = 135,
-	
+
 	//Server auth
-	AUTH_TO_POOLER =  136,
-	
+	AUTH_TO_POOLER = 136,
+
 	//Client auth and response to it
 	ACCOUNT_AUTH = 137,
 	AUTH_RESPONCE = ACCOUNT_AUTH + 1,
-	
+
 	//Verification IDs
 	VERIFY_ACCOUNT = AUTH_RESPONCE + 1,
 	VERIFY_RESPONSE = VERIFY_ACCOUNT + 1,
-	
+
 	//Character management
 	CREATE_CHARACTER = VERIFY_RESPONSE + 1,
 	REQUEST_CHARACTER_INFO = CREATE_CHARACTER + 1,
@@ -29,5 +29,14 @@ enum GameMessages
 	CHECK_NICKNAME = ADD_SERVER + 1,
 
 	//Part of servers sync
-	SERVER_INFO = CHECK_NICKNAME + 1
+	SERVER_INFO = CHECK_NICKNAME + 1,
+
+	//World loading
+	LOAD_WORLD = SERVER_INFO + 1,
+	FINISH_LOAD_WORLD = LOAD_WORLD + 1,
+
+	//Entity management
+	ADD_ENTITY = FINISH_LOAD_WORLD + 1,
+	REMOVE_ENTITY = ADD_ENTITY + 1,
+	UPDATE_ENTITY = REMOVE_ENTITY + 1
 };

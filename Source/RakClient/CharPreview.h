@@ -9,13 +9,14 @@ class CharPreview : public InstUIRequest{
 private:
 	FString name;
 	FString server;
+	int id;
 public:
-	CharPreview(FString c, FString s) : InstUIRequest(), name(c), server(s) {};
+	CharPreview(FString c, FString s, int i) : InstUIRequest(), name(c), server(s), id(i) {};
 
 	~CharPreview(){};
 
 	virtual void instantiate() override{
 		UE_LOG(LogTemp, Warning, TEXT("Instantiate char preview"));
-		ANetwork::instance->AddCharacterPreview(name, server);
+		ANetwork::instance->AddCharacterPreview(name, server, id);
 	};
 };

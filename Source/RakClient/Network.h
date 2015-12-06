@@ -36,7 +36,7 @@ public:
 	virtual void OnAddServer(const FString& text);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character management", meta = (DisplayName = "OnAddCharacterPreview"))
-	virtual void AddCharacterPreview(const FString& name, const FString& server);
+	virtual void AddCharacterPreview(const FString& name, const FString& server, int32 id);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character management", meta = (DisplayName = "OnNickAvailChange"))
 	virtual void SetNickAvailability(const bool avail);
@@ -47,10 +47,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Auth send", meta = (DisplayName = "Send Packet to Auth"))
 	void sendToAuth(const uint8& ID, const FString& arg1, const FString& arg2);
 
+	UFUNCTION(BlueprintCallable, Category = "Auth send", meta = (DisplayName = "Send Packet to Auth(1 arg)"))
+	void sendToAuth1(const uint8& ID, const FString& arg1);
+
+	UFUNCTION(BlueprintCallable, Category = "Auth send", meta = (DisplayName = "Send Packet to Auth(1 arg int)"))
+	void sendToAuth1int(const uint8& ID, int32 arg1);
+
+	UFUNCTION(BlueprintCallable, Category = "Server send", meta = (DisplayName = "Send Packet to Server(1 arg string)"))
+	void sendToServer1Str(const uint8& ID, const FString& arg1);
 
 	UFUNCTION(BlueprintCallable, Category = "Native setters", meta = (DisplayName = "Set selected char name"))
 	void setCharName(const FString& name);
-
 
 	static TSharedPtr<Client> authClient;
 	static TSharedPtr<Client> serverClient;
@@ -66,5 +73,4 @@ public:
 	bool authlaunched = false;
 	const unsigned short authPort = 25565;
 	const std::string authAddress = "localhost";
-	static TMap<int, RakNet::RakString> servers;
 };

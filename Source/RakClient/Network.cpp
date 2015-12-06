@@ -22,11 +22,13 @@ void handleAddCharacter(RakNet::Packet * p)
 	RakNet::BitStream bsIn(p->data, p->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 	RakNet::RakString rak_name, rak_serv_name;
+	int serv_id;
 
 	RakNet::StringCompressor::Instance()->DecodeString(&rak_name, 256, &bsIn);
 	RakNet::StringCompressor::Instance()->DecodeString(&rak_serv_name, 256, &bsIn);
+	bsIn.Read(serv_id);
 	//UE_LOG(LogTemp, Warning, TEXT("HandleAddChar"));
-	ANetwork::requests.Add(new CharPreview(*new FString(rak_name.C_String()), *FString(rak_serv_name.C_String())));
+	ANetwork::requests.Add(new CharPreview(*new FString(rak_name.C_String()), *FString(rak_serv_name.C_String()), serv_id));
 
 };
 
@@ -101,6 +103,17 @@ void onGameServerConnect(RakNet::Packet* p)
 	//Now waiting for a response....
 }
 
+
+void loadWorldResponse(RakNet::Packet* packet)
+{
+
+	RakNet::BitStream bsIn(packet->data, packet->length, false);
+	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+	RakNet::RakString name;
+	bsIn.Read(name);
+	UGameplayStatics::OpenLevel(ANetwork::instance, *new FName(name.C_String()), false, *new FString(""));
+}
+
 void onAccountVerifyResponse(RakNet::Packet* packet)
 {
 	RakNet::BitStream bsIn(packet->data, packet->length, false);
@@ -115,7 +128,7 @@ void onAccountVerifyResponse(RakNet::Packet* packet)
 		RakNet::BitStream bsOut;
 		bsOut.Write((RakNet::MessageID)SELECT_CHARACTER);
 		bsOut.Write(ANetwork::charName);
-		ANetwork::authClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::authClient.Get()->serverRemote, false);
+		ANetwork::serverClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::serverClient.Get()->serverRemote, false);
 	}
     else
     {
@@ -204,10 +217,14 @@ void handleServerInfo(RakNet::Packet* p){
 
 	RakNet::BitStream bsIn(p->data, p->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+	
 	RakNet::RakString addr;
 	int port;
+	
 	bsIn.Read(addr);
 	bsIn.Read(port);
+	UE_LOG(LogTemp, Warning, TEXT("Get server address: %s port: %d"), *FString(addr.C_String()), (int32)port);
+
 	ANetwork::instance->SetServerInfo(FString(addr.C_String()), port);
 };
 
@@ -217,7 +234,7 @@ void connectToAuth(ANetwork* i)
 	ANetwork::authClient.Get()->add((short)ID_CONNECTION_REQUEST_ACCEPTED, handleAuthConnect);
 	ANetwork::authClient.Get()->add((short)ID_CONNECTION_LOST, onLostConn);
 	ANetwork::authClient.Get()->add((short)AUTH_RESPONCE, onAuthResponse);
-	ANetwork::authClient.Get()->add((short)ADD_SERVER, addServerHandler);
+	//ANetwork::authClient.Get()->add((short)ADD_SERVER, addServerHandler);
 	ANetwork::authClient.Get()->add((short)CREATE_CHARACTER, handleAddCharacter);
 	ANetwork::authClient.Get()->add((short)CHECK_NICKNAME, handleNicknameCheck);
 	ANetwork::authClient.Get()->add((short)SERVER_INFO, handleServerInfo);
@@ -241,11 +258,13 @@ void ANetwork::BeginPlay()
 void ANetwork::connectToServer(const FString& host, int32 port)
 {
 
+	UE_LOG(LogTemp, Warning, TEXT("Game server address: %s port: %d" ), *host, port);
 	ANetwork::serverClient = TSharedPtr<Client>(new Client(std::string(TCHAR_TO_UTF8(*host)), port));
 
 	//init handlers...
 	ANetwork::serverClient.Get()->add((short)ID_CONNECTION_REQUEST_ACCEPTED, onGameServerConnect);
 	ANetwork::serverClient.Get()->add((short)VERIFY_RESPONSE, onAccountVerifyResponse);
+	ANetwork::serverClient.Get()->add((short)LOAD_WORLD, loadWorldResponse);
 
 	ANetwork::serverClient.Get()->launch();
 }
@@ -260,8 +279,36 @@ void ANetwork::sendToAuth(const uint8& ID, const FString& arg1, const FString& a
 	ANetwork::authClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::authClient.Get()->serverRemote, false);
 }
 
+
+void ANetwork::sendToAuth1(const uint8& ID, const FString& arg1)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Sending packet: %i"), ID);
+	RakNet::BitStream bsOut;
+	bsOut.Write(ID);
+	bsOut.Write(RakNet::RakString(TCHAR_TO_UTF8(*arg1)));
+	ANetwork::authClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::authClient.Get()->serverRemote, false);
+}
+
+void ANetwork::sendToServer1Str(const uint8& ID, const FString& arg1)
+{
+	RakNet::BitStream bsOut;
+	bsOut.Write(ID);
+	bsOut.Write(RakNet::RakString(TCHAR_TO_UTF8(*arg1)));
+	ANetwork::serverClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::serverClient.Get()->serverRemote, false);
+}
+
+void ANetwork::sendToAuth1int(const uint8& ID, int32 arg1)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Sending packet: %i"), ID);
+	RakNet::BitStream bsOut;
+	bsOut.Write(ID);
+	bsOut.Write(arg1);
+	ANetwork::authClient.Get()->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, ANetwork::authClient.Get()->serverRemote, false);
+}
+
 void ANetwork::setCharName(const FString& name){
 	ANetwork::charName = RakNet::RakString(TCHAR_TO_UTF8(*name));
+	UE_LOG(LogTemp, Warning, TEXT("Char name: %s"), *name);
 };
 
 // Called every frame

@@ -13,7 +13,7 @@
 #include "PacketTypes.h"
 #include "InstUIRequest.h"
 #include "CharPreview.h"
-
+#include "ServerInfo.h"
 
 #include "AllowWindowsPlatformTypes.h"
 #include "ThirdParty/RakNet/RakNet-master/Source/MessageIdentifiers.h"
