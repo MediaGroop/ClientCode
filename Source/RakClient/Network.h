@@ -35,6 +35,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Auth Response", meta = (DisplayName = "OnAddServer"))
 	virtual void OnAddServer(const FString& text);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Worlds management", meta = (DisplayName = "OnWorldLoadRequest"))
+	virtual void LoadWorld(const FString& name);
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character management", meta = (DisplayName = "OnAddCharacterPreview"))
 	virtual void AddCharacterPreview(const FString& name, const FString& server, int32 id);
 
@@ -67,7 +70,7 @@ public:
 	static unsigned char passHash[20];
 	static ANetwork* instance;
 	static RakNet::RakString charName;
-	static TSet<InstUIRequest*> requests;
+	static TSet<Request*> requests;
 
 	static int characters_count;
 	bool authlaunched = false;

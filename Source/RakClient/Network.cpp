@@ -6,6 +6,7 @@
 #include "AuthPacket.h"
 #include "VerifyPacket.h"
 #include "AddServerHandler.h"
+#include "LoadWorldRequest.h"
 
 TSharedPtr<Client> ANetwork::authClient;
 TSharedPtr<Client> ANetwork::serverClient;
@@ -13,7 +14,7 @@ unsigned char ANetwork::session[20];
 RakNet::RakString  ANetwork::login;
 unsigned char ANetwork::passHash[20];
 ANetwork* ANetwork::instance;
-TSet<InstUIRequest*> ANetwork::requests;
+TSet<Request*> ANetwork::requests;
 RakNet::RakString ANetwork::charName;
 
 void handleAddCharacter(RakNet::Packet * p)
@@ -111,7 +112,7 @@ void loadWorldResponse(RakNet::Packet* packet)
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 	RakNet::RakString name;
 	bsIn.Read(name);
-	UGameplayStatics::OpenLevel(ANetwork::instance, *new FName(name.C_String()), false, *new FString(""));
+	ANetwork::requests.Add(new LoadWorldRequest(name));
 }
 
 void onAccountVerifyResponse(RakNet::Packet* packet)
@@ -136,17 +137,6 @@ void onAccountVerifyResponse(RakNet::Packet* packet)
 		//Heh...
     }
 };
-
-/*
-void ANetwork::AddCharacterPreview_Implementation(const FString& c, const FString& n)
-{
-
-}
-
-void ANetwork::ShowAuthResponse_Implementation(const FString& n)
-{
-
-}*/
 
 void onAuthResponse(RakNet::Packet* p)
 {
@@ -315,7 +305,7 @@ void ANetwork::setCharName(const FString& name){
 void ANetwork::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	TSet<InstUIRequest*>::TIterator i = ANetwork::requests.CreateIterator();
+	TSet<Request*>::TIterator i = ANetwork::requests.CreateIterator();
 	while (i)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Instantiate"));

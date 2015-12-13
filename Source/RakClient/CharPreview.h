@@ -3,15 +3,14 @@
 #include "Network.h"
 #include "InstUIRequest.h"
 
-//ANetwork* ANetwork::instance;
 
-class CharPreview : public InstUIRequest{
+class CharPreview : public Request{
 private:
 	FString name;
 	FString server;
 	int id;
 public:
-	CharPreview(FString c, FString s, int i) : InstUIRequest(), name(c), server(s), id(i) {};
+	CharPreview(FString c, FString s, int i) : Request(), name(c), server(s), id(i) {};
 
 	~CharPreview(){};
 

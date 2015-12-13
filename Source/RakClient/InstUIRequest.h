@@ -1,9 +1,9 @@
 #pragma once
 #include "RakClient.h"
 
-class InstUIRequest{
+class Request{
 public:
-	InstUIRequest(){};
-	virtual ~InstUIRequest(){};
+	Request(){};
+	virtual ~Request(){};
 	virtual void instantiate(){};
 };
